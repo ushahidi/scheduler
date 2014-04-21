@@ -42,7 +42,12 @@ var setupProcess = function(sources) {
   _(sources).each(function(source) {
     repeatQueueClient.process(source.id, function(task, done) {
       logger.info("processing task for "+source.id);
-      redisQueueClient.push("suckjs", {id:source.id});
+      var queueName = "suckjs";
+      if(source.language === "python") {
+        queueName = "suckpy";
+      }
+
+      redisQueueClient.push(queueName, {id:source.id});
       done();
 
       if(source.frequency === "repeats") {
