@@ -19,7 +19,7 @@ var findActiveSources = function(callback) {
       logger.warn("no sources found");
       return false;
     }
-
+    logger.info("Found active sources "+_(sources).pluck('sourceType').toString());
     callback(err, sources);
     
   });
@@ -90,6 +90,9 @@ var runApp = function() {
       checkShouldSuck(source, function(shouldSuck) {
         if(shouldSuck) {
           repeatQueueCreate(source, 1000);
+        }
+        else {
+          logger.info("Should not suck "+source.sourceType);
         }
       });
     });
