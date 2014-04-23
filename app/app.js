@@ -42,7 +42,7 @@ var setupProcess = function(sources) {
   _(sources).each(function(source) {
     repeatQueueClient.process(source.id, function(task, done) {
       logger.info("processing task for "+source.id);
-      logger.info(source);
+      logger.info(source.language);
       var queueName = "suckjs";
       if(source.language === "python") {
         queueName = "suckpy";
