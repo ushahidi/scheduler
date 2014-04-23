@@ -49,7 +49,7 @@ var setupProcess = function(sources) {
       }
 
       logger.info("pushing task "+source.id+" to "+queueName);
-      redisQueueClient.push(queueName, {id:source.id});
+      redisQueueClient.push(queueName, JSON.stringify({id:source.id}));
       done();
 
       if(source.frequency === "repeats") {
