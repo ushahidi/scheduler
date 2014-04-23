@@ -65,6 +65,7 @@ var sourceSchema = mongoose.Schema({
       validate: validate('isIn', ['active', 'failing', 'inactive'])
     },
     lastRun: Date,
+    language: String,
     /**
      * Some services allow us to search "since" an id, or since a particular 
      * date, etc etc so it's useful to know what we sucked last.
