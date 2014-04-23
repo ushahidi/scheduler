@@ -47,6 +47,7 @@ var setupProcess = function(sources) {
         queueName = "suckpy";
       }
 
+      logger.info("pushing task "+source.id+" to "+queueName);
       redisQueueClient.push(queueName, {id:source.id});
       done();
 
