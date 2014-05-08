@@ -19,7 +19,6 @@ var findActiveSources = function(callback) {
       logger.warn("no sources found");
       return false;
     }
-    logger.info("Found active sources "+_(sources).pluck('sourceType').toString());
     callback(err, sources);
     
   });
@@ -84,21 +83,40 @@ var checkShouldSuck = function(source, callback) {
 
 
 var runApp = function() {
-  findActiveSources(function(err, sources) {
-    if(err) return logger.error("Error getting active sources");
-    setupProcess(sources);
+  var runningSourceIds = [];
 
-    _(sources).each(function(source) {
-      checkShouldSuck(source, function(shouldSuck) {
-        if(shouldSuck) {
-          repeatQueueCreate(source, 1000);
-        }
-        else {
-          logger.info("Should not suck "+source.sourceType);
-        }
+  var retrieveActiveSources = function() {
+    findActiveSources(function(err, sources) {
+      if(err) return logger.error("Error getting active sources");
+      
+      sources = _(sources).filter(function(source) {
+        return !_(runningSourceIds).contains(source.id);
+      });
+
+      if(sources.length > 0) {
+        logger.info("Found active sources "+_(sources).pluck('sourceType').toString());
+      }
+
+      runningSourceIds = runningSourceIds.concat(_(sources).map(function(source) {
+        return source.id;
+      }));
+
+      setupProcess(sources);
+
+      _(sources).each(function(source) {
+        checkShouldSuck(source, function(shouldSuck) {
+          if(shouldSuck) {
+            repeatQueueCreate(source, 1000);
+          }
+          else {
+            logger.info("Should not suck "+source.sourceType);
+          }
+        });
       });
     });
-  });
+  };
+
+  setInterval(retrieveActiveSources, 3000);
 };
 
 
