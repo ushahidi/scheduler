@@ -134,15 +134,9 @@ if(require.main === module) {
 
   var redisQueueClient = new RedisQueue(makeRedisClient());
 
-  kue.redis.createClient = makeRedisClient;
+  //kue.redis.createClient = makeRedisClient;
 
-  var repeatQueueClient = kue.createQueue({
-    redis: {
-      port: "6379",
-      host: "localhost",
-      auth: ""
-    }
-  });
+  var repeatQueueClient = kue.createQueue();
 
   repeatQueueClient.promote();
 
