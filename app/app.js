@@ -11,6 +11,12 @@ var config = require('config')
   , async = require('async');
 
 
+if(process.env.NODE_ENV && process.env.NODE_ENV === "production") {
+  var PosixSyslog = require('winston-posix-syslog').PosixSyslog;
+
+  logger.add(PosixSyslog, {identity: 'scheduler'});
+}
+
 var findActiveSources = function(callback) {
   store.Source.findActive(function(err, sources) {
     if(err) return logger.error("Error getting active sources");

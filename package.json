@@ -29,7 +29,8 @@
     "async": "~0.2.10",
     "simple-redis-queue": "~0.9.3",
     "validator": "~3.5.0",
-    "minimist": "0.0.8"
+    "minimist": "0.0.8",
+    "winston-posix-syslog": "0.0.7"
   },
   "devDependencies": {
     "mocha": "1.13.0",
