@@ -6,7 +6,7 @@
   "scripts": {
     "dev-server": "NODE_ENV=development nodemon app/app.js",
     "staging-server": "NODE_ENV=staging node app/app.js",
-    "prod-server": "NODE_ENV=production node app.js",
+    "prod-server": "NODE_ENV=production node app/app.js",
     "run-test": "NODE_ENV=test mocha"
   },
   "repository": {

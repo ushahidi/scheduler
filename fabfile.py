@@ -106,7 +106,7 @@ def copy_private_files():
 def do_release():
     sudo('npm install')
     copy_private_files()
-    check_upstart(env.upstart_script)
+    check_upstart()
     sudo('service '+env.upstart_script+' status && restart '+env.upstart_script+' || start '+env.upstart_script)
 
 
