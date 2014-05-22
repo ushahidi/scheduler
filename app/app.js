@@ -26,7 +26,7 @@ var findActiveSources = function(callback) {
 
 
 var repeatQueueCreate = function(source, repeatDelay, callback) {
-  repeatQueueClient.create(source.id, {source:source})
+  repeatQueueClient.create(source.id, {source:{id:source.id}})
     .delay(repeatDelay)
     .save(function(err, state) {
       logger.info("new task created for " + source.id);
