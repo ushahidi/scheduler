@@ -86,6 +86,7 @@ var runApp = function() {
   var runningSourceIds = [];
 
   var retrieveActiveSources = function() {
+    logger.info("Retrieving active sources...");
     findActiveSources(function(err, sources) {
       if(err) return logger.error("Error getting active sources");
       
@@ -116,7 +117,7 @@ var runApp = function() {
     });
   };
 
-  setInterval(retrieveActiveSources, 3000);
+  setInterval(retrieveActiveSources, 30000);
 };
 
 
@@ -137,9 +138,9 @@ if(require.main === module) {
 
   var repeatQueueClient = kue.createQueue({
     redis: {
-      port: config.queue.port,
-      host: config.queue.host,
-      auth: config.queue.password
+      port: "6379",
+      host: "localhost",
+      auth: ""
     }
   });
 

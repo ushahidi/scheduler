@@ -18,18 +18,19 @@ def staging():
     env.password = deploy_config.STAGING_PASSWORD
     env.key_filename = ''
     env.branch = 'development'
-    env.upstart_script = 'cn-scheduler.conf'
+    env.upstart_script = 'cn-scheduler'
     env.settings_file = 'staging.json'
 
 
 @task
 def production():
-    env.host_string = ''
-    env.user = ''
-    env.key_filename = ''
+    env.host_string = deploy_config.PROD_HOST
+    env.user = deploy_config.PROD_USER
+    env.password = deploy_config.PROD_PASSWORD
     env.branch = 'master'
-    env.upstart_script = ''
+    env.upstart_script = 'cn-scheduler-prod'
     env.settings_file = 'production.json'
+    env.port = 15922
 
 
 @task
@@ -53,13 +54,14 @@ def install_deps():
         sudo('apt-get install -y --no-upgrade %s' % dep)
 
 
-def check_upstart(upstart_conf):
+def check_upstart():
     """
-    Checks if upstart exists; if not, upstart job is created.
+    Checks if uwsgi upstart exists; if not, upstart job is created.
     If it exists and is different from the checked-in version, it's updated.
     """
-    sudo('test -f /etc/init/cn-scheduler.conf || cp etc/%s /etc/init/cn-scheduler.conf' % upstart_conf)
-    sudo('diff etc/%s /etc/init/cn-scheduler.conf || cp etc/%s /etc/init/cn-scheduler.conf' % (upstart_conf, upstart_conf))
+    conf = env.upstart_script+'.conf'
+    sudo('test -f /etc/init/'+conf+' || cp etc/'+conf+' /etc/init')
+    sudo('diff etc/'+conf+' /etc/init/'+conf+' || cp etc/'+conf+' /etc/init')
 
 
 def prepare_log_file():
@@ -105,7 +107,7 @@ def do_release():
     sudo('npm install')
     copy_private_files()
     check_upstart(env.upstart_script)
-    sudo('service cn-scheduler status && restart cn-scheduler || start cn-scheduler')
+    sudo('service '+env.upstart_script+' status && restart '+env.upstart_script+' || start '+env.upstart_script)
 
 
 def record_release():
