@@ -13,7 +13,6 @@ var config = require('config')
 
 if(process.env.NODE_ENV && process.env.NODE_ENV === "production") {
   var PosixSyslog = require('winston-posix-syslog').PosixSyslog;
-
   logger.add(PosixSyslog, {identity: 'scheduler'});
 }
 
@@ -32,7 +31,7 @@ var findActiveSources = function(callback) {
 
 
 var repeatQueueCreate = function(source, repeatDelay, callback) {
-  repeatQueueClient.create(source.id, {source:{id:source.id}})
+  repeatQueueClient.create(source.id, {source:{id:source.id, sourceType: source.sourceType}})
     .delay(repeatDelay)
     .save(function(err, state) {
       logger.info("new task created for " + source.id);
@@ -128,6 +127,10 @@ var runApp = function() {
 
 
 if(require.main === module) {
+  var nodeEnv = process.env.NODE_ENV || "unknown";
+  logger.info("Starting scheduler with env="+nodeEnv);
+
+
   // Start kue web server on port 3000
   // @TODO secure this in production
   kue.app.listen(3000);
