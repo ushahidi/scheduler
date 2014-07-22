@@ -94,6 +94,8 @@ var runApp = function() {
     logger.info("Retrieving active sources...");
     findActiveSources(function(err, sources) {
       if(err) return logger.error("Error getting active sources");
+
+      logger.info(_(sources).pluck('id').toString());
       
       sources = _(sources).filter(function(source) {
         return !_(runningSourceIds).contains(source.id);
